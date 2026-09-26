@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { getWorkouts } from "@/lib/api";
-import WorkoutCard from "@/components/WorkoutCard";
+import LibrarySection from "@/components/LibrarySection";
 
 export default async function Home() {
   const workouts = await getWorkouts();
@@ -47,23 +47,7 @@ export default async function Home() {
         </section>
       </div>
 
-      <section
-        id="library"
-        className="mx-auto max-w-7xl px-4 pb-10 pt-10 sm:px-6 lg:px-8"
-      >
-        <h2 className="font-[var(--font-display)] text-2xl font-bold uppercase tracking-tight text-white sm:text-3xl">
-          The Library
-        </h2>
-        <p className="mt-2 text-white/50">
-          Twelve lifts covering every major muscle group.
-        </p>
-
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {workouts.map((workout) => (
-            <WorkoutCard key={workout.id} workout={workout} />
-          ))}
-        </div>
-      </section>
+      <LibrarySection workouts={workouts} />
     </main>
   );
 }

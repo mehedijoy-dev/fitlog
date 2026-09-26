@@ -3,7 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronDown, Check, X, Clock, Flame, Star } from "lucide-react";
+import {
+  ChevronDown,
+  Check,
+  X,
+  Clock,
+  Flame,
+  Star,
+  Search,
+} from "lucide-react";
 import { usePlan, PlanItem } from "@/context/PlanContext";
 import { SortKey } from "@/lib/types";
 
@@ -21,9 +29,13 @@ export default function MyPlanPage() {
   const [tab, setTab] = useState<Tab>("plan");
   const [sortKey, setSortKey] = useState<SortKey>("duration");
   const [sortOpen, setSortOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   const activeList = tab === "plan" ? plan : saved;
   const sortedList = [...activeList].sort((a, b) => b[sortKey] - a[sortKey]);
+  const filteredList = sortedList.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase()),
+  );
 
   const totalMinutes = activeList.reduce((sum, w) => sum + w.duration, 0);
   const totalCalories = activeList.reduce(
@@ -117,27 +129,47 @@ export default function MyPlanPage() {
         </div>
       </div>
 
+      <div className="relative mt-4">
+        <Search
+          size={16}
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/40"
+        />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by workout name..."
+          className="w-full rounded-lg border border-white/15 bg-white/[0.03] py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/40 focus:border-[#ccff00]/50 focus:outline-none sm:w-72"
+        />
+      </div>
+
       <div className="mt-6">
         {!hydrated ? (
           <p className="py-10 text-center text-white/50">Loading workouts…</p>
-        ) : sortedList.length === 0 ? (
+        ) : filteredList.length === 0 ? (
           <div className="rounded-lg border border-dashed border-white/20 bg-white/[0.02] px-6 py-16 text-center">
             <h3 className="font-[var(--font-display)] text-lg font-bold uppercase text-white">
-              Nothing Here Yet
+              {activeList.length === 0
+                ? "Nothing Here Yet"
+                : "No Matches Found"}
             </h3>
             <p className="mt-2 text-sm text-white/50">
-              Browse the library and add a lift to get today moving.
+              {activeList.length === 0
+                ? "Browse the library and add a lift to get today moving."
+                : "Try a different search term."}
             </p>
-            <Link
-              href="/"
-              className="mt-6 inline-flex items-center rounded-lg bg-[#ccff00] px-5 py-2.5 text-sm font-bold uppercase text-black transition hover:brightness-95"
-            >
-              Go to workouts
-            </Link>
+            {activeList.length === 0 && (
+              <Link
+                href="/"
+                className="mt-6 inline-flex items-center rounded-lg bg-[#ccff00] px-5 py-2.5 text-sm font-bold uppercase text-black transition hover:brightness-95"
+              >
+                Go to workouts
+              </Link>
+            )}
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {sortedList.map((item) => (
+            {filteredList.map((item) => (
               <PlanRow
                 key={item.id}
                 item={item}
