@@ -18,7 +18,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="border-b border-white/10 bg-[#0a0a0a]">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0a0a]/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logo.png" alt="FitLog logo" width={24} height={24} />
@@ -73,7 +73,7 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="flex flex-col gap-1 border-t border-white/10 px-4 py-3 sm:hidden">
+        <div className="flex flex-col gap-1 border-t border-white/10 bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-3 sm:hidden">
           {links.map((link) => {
             const active = pathname === link.href;
             return (
