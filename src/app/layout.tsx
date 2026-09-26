@@ -3,6 +3,7 @@ import { Oswald, Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { PlanProvider } from "@/context/PlanContext";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const oswald = Oswald({
@@ -33,8 +34,11 @@ export default function RootLayout({
         className={`${oswald.variable} ${inter.variable} bg-[#0a0a0a] font-[var(--font-body)] text-white antialiased`}
       >
         <PlanProvider>
-          <Navbar />
-          {children}
+          <div className="flex min-h-screen flex-col">
+            <Navbar />
+            <div className="flex-1">{children}</div>
+            <Footer />
+          </div>
           <Toaster
             position="top-right"
             toastOptions={{

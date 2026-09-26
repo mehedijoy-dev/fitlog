@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronDown, Check, X } from "lucide-react";
+import { ChevronDown, Check, X, Clock, Flame, Star } from "lucide-react";
 import { usePlan, PlanItem } from "@/context/PlanContext";
 import { SortKey } from "@/lib/types";
 
@@ -25,11 +25,14 @@ export default function MyPlanPage() {
   const activeList = tab === "plan" ? plan : saved;
   const sortedList = [...activeList].sort((a, b) => b[sortKey] - a[sortKey]);
 
-  const totalMinutes = plan.reduce((sum, w) => sum + w.duration, 0);
-  const totalCalories = plan.reduce((sum, w) => sum + w.caloriesBurned, 0);
+  const totalMinutes = activeList.reduce((sum, w) => sum + w.duration, 0);
+  const totalCalories = activeList.reduce(
+    (sum, w) => sum + w.caloriesBurned,
+    0,
+  );
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+    <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <h1 className="font-[var(--font-display)] text-3xl font-bold uppercase tracking-tight text-white sm:text-4xl">
         My Plan
       </h1>
@@ -43,7 +46,7 @@ export default function MyPlanPage() {
             Exercises
           </p>
           <p className="mt-1 text-2xl font-bold text-[#ccff00]">
-            {plan.length}
+            {activeList.length}
           </p>
         </div>
         <div>
@@ -61,53 +64,56 @@ export default function MyPlanPage() {
       </div>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1">
+        <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.03] p-1">
           <button
             onClick={() => setTab("plan")}
-            className={`cursor-pointer rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+            className={`cursor-pointer rounded-md px-4 py-1.5 text-sm font-semibold transition ${
               tab === "plan"
                 ? "bg-white text-black"
-                : "text-white/60 hover:text-white"
+                : "text-white/50 hover:text-white"
             }`}
           >
             Today&apos;s Plan
           </button>
           <button
             onClick={() => setTab("saved")}
-            className={`cursor-pointer rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+            className={`cursor-pointer rounded-md px-4 py-1.5 text-sm font-semibold transition ${
               tab === "saved"
                 ? "bg-white text-black"
-                : "text-white/60 hover:text-white"
+                : "text-white/50 hover:text-white"
             }`}
           >
             Saved
           </button>
         </div>
 
-        <div className="relative">
-          <button
-            onClick={() => setSortOpen((v) => !v)}
-            className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-sm text-white"
-          >
-            Sort By: {sortOptions.find((o) => o.key === sortKey)?.label}
-            <ChevronDown size={14} />
-          </button>
-          {sortOpen && (
-            <div className="absolute right-0 top-full z-10 mt-1 w-40 rounded-lg border border-white/10 bg-[#111318] p-1 shadow-lg">
-              {sortOptions.map((opt) => (
-                <button
-                  key={opt.key}
-                  onClick={() => {
-                    setSortKey(opt.key);
-                    setSortOpen(false);
-                  }}
-                  className="block w-full cursor-pointer rounded-md px-3 py-2 text-left text-sm text-white hover:bg-white/10"
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          )}
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-white/50">Sort By</span>
+          <div className="relative">
+            <button
+              onClick={() => setSortOpen((v) => !v)}
+              className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/15 bg-white/[0.03] px-3 py-1.5 text-sm text-white"
+            >
+              {sortOptions.find((o) => o.key === sortKey)?.label}
+              <ChevronDown size={14} />
+            </button>
+            {sortOpen && (
+              <div className="absolute right-0 top-full z-10 mt-1 w-40 rounded-lg border border-white/10 bg-[#111318] p-1 shadow-lg">
+                {sortOptions.map((opt) => (
+                  <button
+                    key={opt.key}
+                    onClick={() => {
+                      setSortKey(opt.key);
+                      setSortOpen(false);
+                    }}
+                    className="block w-full cursor-pointer rounded-md px-3 py-2 text-left text-sm text-white hover:bg-white/10"
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -163,9 +169,9 @@ function PlanRow({
   onMarkDone: () => void;
 }) {
   return (
-    <div className="flex flex-col items-start gap-4 rounded-lg border border-white/10 bg-white/[0.03] p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col items-start gap-4 rounded-lg border border-white/10 bg-white/[0.03] p-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-4">
-        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md">
+        <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg">
           <Image
             src={item.image}
             alt={item.name}
@@ -179,10 +185,19 @@ function PlanRow({
             {item.name}
           </h3>
           <p className="text-xs text-white/50">{item.equipment}</p>
-          <div className="mt-1 flex items-center gap-3 text-xs text-white/60">
-            <span>{item.duration} min</span>
-            <span>{item.caloriesBurned} kcal</span>
-            <span>★ {item.rating}</span>
+          <div className="mt-1 flex items-center gap-3 text-xs text-white/70">
+            <span className="flex items-center gap-1">
+              <Clock size={12} className="text-[#ccff00]" />
+              {item.duration} min
+            </span>
+            <span className="flex items-center gap-1">
+              <Flame size={12} className="text-[#ccff00]" />
+              {item.caloriesBurned} kcal
+            </span>
+            <span className="flex items-center gap-1">
+              <Star size={12} className="text-[#ccff00]" />
+              {item.rating}
+            </span>
           </div>
         </div>
       </div>
@@ -190,14 +205,14 @@ function PlanRow({
       <div className="flex items-center gap-2">
         <Link
           href={`/workout/${item.id}`}
-          className="cursor-pointer rounded-lg border border-white/30 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-white/10"
+          className="cursor-pointer whitespace-nowrap rounded-lg border border-white/30 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-white/10"
         >
           View Details
         </Link>
         {tab === "plan" && (
           <button
             onClick={onMarkDone}
-            className={`flex cursor-pointer items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-bold uppercase transition ${
+            className={`flex cursor-pointer items-center gap-1 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium transition ${
               item.done
                 ? "bg-white/10 text-white/50"
                 : "bg-[#ccff00] text-black hover:brightness-95"
