@@ -24,7 +24,10 @@ export default function Error({
         temporary — please try again in a moment.
       </p>
       <button
-        onClick={reset}
+        onClick={() => {
+          reset();
+          window.location.reload();
+        }}
         className="mt-8 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-[#ccff00] px-6 py-3 text-sm font-bold uppercase text-black transition hover:brightness-95"
       >
         <RefreshCcw size={16} strokeWidth={2.5} />
