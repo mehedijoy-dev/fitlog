@@ -1,7 +1,11 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { getWorkouts } from "@/lib/api";
+import WorkoutCard from "@/components/WorkoutCard";
 
-export default function Home() {
+export default async function Home() {
+  const workouts = await getWorkouts();
+
   return (
     <main className="bg-[#0a0a0a]">
       <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
@@ -30,18 +34,36 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="relative mx-auto aspect-square w-full max-w-[260px] sm:max-w-xs lg:max-w-[280px]">
+            <div className="group relative mx-auto aspect-square w-full max-w-[300px] cursor-pointer sm:max-w-sm lg:max-w-[340px]">
               <Image
                 src="/banner.png"
                 alt="FitLog workout banner"
                 fill
-                className="object-contain"
+                className="object-contain transition-transform duration-300 group-hover:scale-105"
                 priority
               />
             </div>
           </div>
         </section>
       </div>
+
+      <section
+        id="library"
+        className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8"
+      >
+        <h2 className="font-[var(--font-display)] text-2xl font-bold uppercase tracking-tight text-white sm:text-3xl">
+          The Library
+        </h2>
+        <p className="mt-2 text-white/50">
+          Twelve lifts covering every major muscle group.
+        </p>
+
+        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {workouts.map((workout) => (
+            <WorkoutCard key={workout.id} workout={workout} />
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
