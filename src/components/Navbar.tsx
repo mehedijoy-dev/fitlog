@@ -18,7 +18,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0a0a]/85 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0a0a]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logo.png" alt="FitLog logo" width={24} height={24} />
@@ -27,14 +27,14 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-2 sm:flex">
+        <nav className="hidden items-center gap-1 sm:flex">
           {links.map((link) => {
             const active = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`cursor-pointer rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+                className={`cursor-pointer rounded-full px-3 py-1 text-sm font-semibold transition-colors ${
                   active
                     ? "bg-[#2a3620] text-[#ccff00]"
                     : "text-white/70 hover:bg-white/10 hover:text-white"
@@ -48,13 +48,19 @@ export default function Navbar() {
 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-3 text-xs text-white/70 sm:gap-4">
-            <Link href="/my-plan" className="flex items-center gap-1.5">
+            <Link
+              href="/my-plan"
+              className="flex cursor-pointer items-center gap-1.5 transition hover:text-white"
+            >
               <span>Plan</span>
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#ccff00] text-[11px] font-bold text-black">
                 {plan.length}
               </span>
             </Link>
-            <Link href="/my-plan" className="flex items-center gap-1.5">
+            <Link
+              href="/my-plan"
+              className="flex cursor-pointer items-center gap-1.5 transition hover:text-white"
+            >
               <span>Saved</span>
               <span className="flex h-5 w-5 items-center justify-center rounded-full border border-white/40 text-[11px] font-bold text-white">
                 {saved.length}
@@ -64,7 +70,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setOpen((v) => !v)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-white sm:hidden"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-white/10 text-white sm:hidden"
             aria-label="Toggle menu"
           >
             {open ? <X size={18} /> : <Menu size={18} />}
@@ -73,7 +79,7 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="flex flex-col gap-1 border-t border-white/10 bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-3 sm:hidden">
+        <div className="flex flex-col gap-1 border-t border-white/10 px-4 py-3 sm:hidden">
           {links.map((link) => {
             const active = pathname === link.href;
             return (
@@ -81,7 +87,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className={`rounded-lg px-3 py-2 text-sm font-semibold ${
+                className={`cursor-pointer rounded-lg px-3 py-2 text-sm font-semibold ${
                   active ? "bg-[#2a3620] text-[#ccff00]" : "text-white/70"
                 }`}
               >
